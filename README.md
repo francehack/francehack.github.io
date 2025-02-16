@@ -9,6 +9,7 @@
 | 04/02 | EDF, Conforama | Énergie, Commerce | **Vols de données en France** | Intrusions et extraction de données | 15 millions de personnes affectées | Un hacker prétend avoir compromis 15 millions de données (EDF et Conforama). |
 | 27/01 | Fédérations sportives | Sport | **Fédérations sportives piratées** | Faille chez un prestataire | 4,5 millions de personnes affectées | Fuite de données de 4,5 millions de membres de fédérations. |
 | 27/01 | E. Leclerc | Commerce | **Intrusion chez E. Leclerc** | Accès frauduleux aux comptes | Comptes réinitialisés | Accès frauduleux détectés sur Primes énergie E.Leclerc, réinitialisation des comptes. |
+| 27/01 | Fédération Française de Roller et Skateboard | Sport | **Piratage de la FFRS** | Faille dans l’outil Roslkanet | Données des licenciés compromises | Un pirate a exploité une faille compromettant potentiellement les données des licenciés. Les mots de passe ne sont pas concernés. |
 | 23/01 | Carrefour | Commerce | **Carrefour dément une fuite** | Aucun accès illégitime détecté | Aucun impact signalé | Aucune preuve d’intrusion dans ses systèmes. |
 | 20/01 | Carrefour | Commerce | **Fuite chez Carrefour ?** | Mise en vente d’une base de données | 13 millions de clients potentiellement affectés | 13 millions de clients potentiellement affectés selon un hacker. |
 | 14/01 | Kiabi | Prêt-à-porter | **Kiabi victime d’une attaque** | Credential stuffing | 20 000 comptes affectés | 20 000 comptes compromis, consultation d’IBAN facilitant des fraudes. |
