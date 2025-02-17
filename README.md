@@ -1,4 +1,5 @@
 # Les dernières attaques en france
+# 2025
 
 | Date       | Société | Secteur | Incident | Technique | Impact | Détails |
 |------------|---------|---------|---------|-----------|--------|---------|
@@ -16,6 +17,10 @@
 | 13/01 | Showroomprivé | E-commerce | **Showroomprivé repousse une attaque** | Tentatives de connexion malveillantes | Compromission évitée | Tentatives de connexion malveillantes bloquées, demande de changement de mots de passe. |
 | 07/01 | Atos | Informatique | **Atos nie une cyberattaque** | Propagation de fausses informations | Aucun impact confirmé | Les pirates n'ont pas volé de données d’Atos directement. |
 | 02/01 | Collectivités françaises | Secteur public | **Vague d’attaques DDoS** | Attaques DDoS | Sites paralysés temporairement | Paralysie de nombreux sites français par des pirates pro-russes. |
+
+# 2024
+| Date       | Société | Secteur | Incident | Technique | Impact | Détails |
+|------------|---------|---------|---------|-----------|--------|---------|
 | 31/12 | Ecritel | Cloud | **Tentative d’intrusion chez Ecritel** | Compromission d’un serveur interne | Fuite de documents internes | Compromission d’un serveur interne malgré les contre-mesures. |
 | 14/12 | Top Achat | E-commerce | **Fuite de données chez Top Achat** | Intrusion et vol de données | Données clients en danger | Vol d’informations clients, potentiel usage malveillant. |
 | 12/12 | Eurostar | Transport | **Piratage d’Eurostar** | Violation d’un partenaire | Données revendues sur le dark web | Données de voyageurs retrouvées sur le dark web. |
