@@ -16,7 +16,7 @@ def get_cyberattacks():
         model=GPT_ID,  # Utilisation du GPT personnalisé
         messages=[
             {"role": "system", "content": "Tu es un expert en cybersécurité qui génère des tableaux de cyberattaques."},
-            {"role": "user", "content": "Génère le tableau des cyberattaques de 2025 en Markdown."}
+            {"role": "user", "content": "Génère le tableau des cyberattaques 2025 en utilisant toutes les sources"}
         ],
         temperature=0.7
     )
