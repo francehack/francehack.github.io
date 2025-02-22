@@ -2,7 +2,7 @@ name: CyberSec Watcher - GPT Update
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Exécuter tous les jours à 08h UTC
+    - cron: '0 8 * * 1'  # Exécuter chaque lundi
   workflow_dispatch:  # Permet d'exécuter manuellement depuis GitHub Actions
 
 jobs:
