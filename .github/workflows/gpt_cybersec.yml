@@ -1,0 +1,35 @@
+name: CyberSec Watcher - GPT Update
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Exécuter tous les jours à 08h UTC
+  workflow_dispatch:  # Permet de l'exécuter manuellement depuis GitHub
+
+jobs:
+  update_cybersec_table:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Cloner le repo
+        uses: actions/checkout@v3
+
+      - name: 🛠️ Installer Python et dépendances
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 📦 Installer les librairies requises
+        run: pip install openai
+
+      - name: 🔑 Configurer la clé API OpenAI
+        run: echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> $GITHUB_ENV
+
+      - name: 🚀 Exécuter le script GPT
+        run: python cybersec_gpt.py
+
+      - name: 🔄 Commit et Push des résultats
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add cyberattaques_2025.md
+          git commit -m "🔄 Mise à jour quotidienne du tableau des cyberattaques"
+          git push
