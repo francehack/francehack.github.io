@@ -5,7 +5,7 @@ import os
 API_KEY = os.getenv("OPENAI_API_KEY")
 
 # 📌 ID du GPT personnalisé (à récupérer sur OpenAI)
-GPT_ID = "g-67b9896d3d3881918073bac8dc5faa91-cybersec-watcher"  # Remplace par ton ID exact
+GPT_ID = "g-67b9896d3d3881918073bac8dc5faa91"  # Remplace par ton ID exact
 
 #https://chatgpt.com/g/g-67b9896d3d3881918073bac8dc5faa91-cybersec-watcher
 # ✅ Initialiser le client OpenAI
