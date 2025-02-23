@@ -16,55 +16,58 @@ client = openai.Client(api_key=API_KEY)
 # 📂 Configuration du log
 logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-# 📡 SOURCES FIABLES À SCRAPER
-SOURCES = {
-    "01Net": "https://www.01net.com/actualites/cyberattaques-france-dernieres-fuites-donnees-entreprises-touchees.html",
-}
+# 📡 URL de 01Net à scraper
+SOURCE_URL = "https://www.01net.com/actualites/cyberattaques-france-dernieres-fuites-donnees-entreprises-touchees.html"
 
-# 📌 Fonction pour scraper les cyberattaques
+# 📌 Fonction pour scraper les cyberattaques depuis 01Net
 def fetch_cyberattacks():
+    print(f"🔍 Scraping de {SOURCE_URL}...")
     all_articles = []
-    for source, url in SOURCES.items():
-        print(f"🔍 Scraping {source}...")
-        try:
-            response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
-            if response.status_code != 200:
-                print(f"⚠️ Erreur {response.status_code} sur {source}")
-                logging.warning(f"⚠️ Impossible d'accéder à {source} - Code {response.status_code}")
-                continue
 
-            soup = BeautifulSoup(response.text, "html.parser")
-            articles = soup.find_all("article")[:5]  # Récupérer les 5 derniers articles
+    try:
+        response = requests.get(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+        if response.status_code != 200:
+            print(f"⚠️ Erreur {response.status_code} sur 01Net")
+            logging.warning(f"⚠️ Impossible d'accéder à 01Net - Code {response.status_code}")
+            return []
 
-            for article in articles:
-                title = article.find("h2").text.strip() if article.find("h2") else "Titre inconnu"
-                summary = article.find("p").text.strip() if article.find("p") else "Résumé non disponible"
-                link = article.find("a")["href"] if article.find("a") else url
-                all_articles.append({
-                    "source": source,
-                    "titre": title,
-                    "resume": summary,
-                    "lien": link
-                })
+        soup = BeautifulSoup(response.text, "html.parser")
 
-        except requests.RequestException as e:
-            print(f"❌ Erreur lors du scraping de {source}: {e}")
-            logging.error(f"❌ Erreur scraping {source}: {e}")
+        # 🔍 Extraction des articles (basé sur la structure HTML de 01Net)
+        articles = soup.find_all("article")[:10]  # On limite à 10 articles récents
+
+        for article in articles:
+            title = article.find("h2").text.strip() if article.find("h2") else "Titre inconnu"
+            summary = article.find("p").text.strip() if article.find("p") else "Résumé non disponible"
+            link = article.find("a")["href"] if article.find("a") else SOURCE_URL
+            date = article.find("time").text.strip() if article.find("time") else "Date inconnue"
+
+            # Nettoyage et structuration des données
+            all_articles.append({
+                "date": date,
+                "titre": title,
+                "resume": summary,
+                "lien": f"https://www.01net.com{link}" if not link.startswith("http") else link
+            })
+
+    except requests.RequestException as e:
+        print(f"❌ Erreur lors du scraping de 01Net: {e}")
+        logging.error(f"❌ Erreur scraping 01Net: {e}")
 
     return all_articles
 
 # 📌 Fonction pour envoyer les données à OpenAI et générer le tableau Markdown
 def generate_cyberattack_table(articles):
     if not articles:
-        return "❌ Aucune cyberattaque trouvée dans les sources disponibles."
+        return "❌ Aucune cyberattaque trouvée sur 01Net."
 
     articles_text = "\n".join([
-        f"- **Source** : {article['source']}\n  **Titre** : {article['titre']}\n  **Résumé** : {article['resume']}\n  **Lien** : {article['lien']}"
+        f"- **Date** : {article['date']}\n  **Titre** : {article['titre']}\n  **Résumé** : {article['resume']}\n  **Lien** : {article['lien']}"
         for article in articles
     ])
 
     prompt = f"""
-    Voici une liste d'articles confirmés sur les cyberattaques en France en 2025 :
+    Voici une liste d'articles récents sur les cyberattaques en France extraits de 01Net :
 
     {articles_text}
 
@@ -94,7 +97,7 @@ def generate_cyberattack_table(articles):
 
 # 📌 Exécuter le scraping et générer le fichier
 if __name__ == "__main__":
-    print("🚀 Scraping des sources...")
+    print("🚀 Scraping de 01Net...")
     articles = fetch_cyberattacks()
 
     print("🚀 Génération du tableau avec OpenAI...")
