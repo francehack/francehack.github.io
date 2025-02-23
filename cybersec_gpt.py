@@ -19,10 +19,10 @@ logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s 
 # 📡 URL de 01Net à scraper
 SOURCE_URL = "https://www.01net.com/actualites/cyberattaques-france-dernieres-fuites-donnees-entreprises-touchees.html"
 
-# 📌 Fonction pour scraper les cyberattaques depuis 01Net
+# 📌 Fonction pour scraper uniquement la section pertinente de 01Net
 def fetch_cyberattacks():
     print(f"🔍 Scraping de {SOURCE_URL}...")
-    all_articles = []
+    all_entries = []
 
     try:
         response = requests.get(SOURCE_URL, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
@@ -33,28 +33,46 @@ def fetch_cyberattacks():
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # 🔍 Extraction des articles (basé sur la structure HTML de 01Net)
-        articles = soup.find_all("article")[:10]  # On limite à 10 articles récents
+        # 🔍 Trouver la section de l’article à scraper
+        sommaire = soup.find("h2", string="Sommaire")  # Trouver l'en-tête Sommaire
+        votre_opinion = soup.find("h2", string="Votre opinion")  # Trouver la fin de l'article
 
-        for article in articles:
-            title = article.find("h2").text.strip() if article.find("h2") else "Titre inconnu"
-            summary = article.find("p").text.strip() if article.find("p") else "Résumé non disponible"
-            link = article.find("a")["href"] if article.find("a") else SOURCE_URL
-            date = article.find("time").text.strip() if article.find("time") else "Date inconnue"
+        if not sommaire or not votre_opinion:
+            print("⚠️ Impossible de trouver les sections 'Sommaire' et 'Votre opinion'.")
+            logging.warning("⚠️ Sections Sommaire et Votre opinion non trouvées.")
+            return []
 
-            # Nettoyage et structuration des données
-            all_articles.append({
-                "date": date,
-                "titre": title,
-                "resume": summary,
-                "lien": f"https://www.01net.com{link}" if not link.startswith("http") else link
-            })
+        # Extraire uniquement le contenu situé entre ces deux balises
+        content_section = []
+        for element in sommaire.find_next_siblings():
+            if element == votre_opinion:
+                break  # Arrêter le scraping à "Votre opinion"
+            content_section.append(element.text.strip())
+
+        # 🛠️ Nettoyage du texte
+        content_text = "\n".join(content_section).strip()
+
+        # 📌 Séparer chaque cyberattaque en utilisant les titres en gras comme repère
+        entries = content_text.split("\n\n")
+        for entry in entries:
+            lines = entry.split("\n")
+            if len(lines) > 1:  # Vérifier qu'il y a bien une structure
+                date = lines[0].strip()  # La première ligne est la date
+                title = lines[1].strip()  # La deuxième ligne est l’entreprise concernée
+                description = " ".join(lines[2:]).strip()  # Le reste est la description de l’attaque
+
+                all_entries.append({
+                    "date": date,
+                    "titre": title,
+                    "resume": description,
+                    "lien": SOURCE_URL  # Même lien pour toutes les attaques
+                })
 
     except requests.RequestException as e:
         print(f"❌ Erreur lors du scraping de 01Net: {e}")
         logging.error(f"❌ Erreur scraping 01Net: {e}")
 
-    return all_articles
+    return all_entries
 
 # 📌 Fonction pour envoyer les données à OpenAI et générer le tableau Markdown
 def generate_cyberattack_table(articles):
