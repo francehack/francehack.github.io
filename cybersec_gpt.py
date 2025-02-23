@@ -19,8 +19,6 @@ logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s 
 # 📡 SOURCES FIABLES À SCRAPER
 SOURCES = {
     "01Net": "https://www.01net.com/actualites/cyberattaques-france-dernieres-fuites-donnees-entreprises-touchees.html",
-    "LeMagIT": "https://www.lemagit.fr/actualites/Cybersecurite",
-    "ZDNet": "https://www.zdnet.fr/actualites/cybersecurite-4000080368q.htm"
 }
 
 # 📌 Fonction pour scraper les cyberattaques
