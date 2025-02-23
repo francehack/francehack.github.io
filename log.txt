@@ -1,3 +1,6 @@
 2025-02-23 07:53:11,167 - WARNING - ⚠️ Impossible d'accéder à ZDNet - Code 404
 2025-02-23 07:53:14,034 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
 2025-02-23 07:53:14,040 - INFO - ✅ Fichier 'cyberattaques_2025.md' mis à jour avec succès !
+2025-02-23 08:34:53,641 - WARNING - ⚠️ Impossible d'accéder à ZDNet - Code 404
+2025-02-23 08:35:09,443 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-02-23 08:35:09,453 - INFO - ✅ Fichier 'cyberattaques_2025.md' mis à jour avec succès !
