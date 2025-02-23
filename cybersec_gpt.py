@@ -19,7 +19,7 @@ logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s 
 # 📡 URL de 01Net à scraper
 SOURCE_URL = "https://www.01net.com/actualites/cyberattaques-france-dernieres-fuites-donnees-entreprises-touchees.html"
 
-# 📌 Fonction pour scraper uniquement la section pertinente de 01Net
+# 📌 Fonction pour scraper la section pertinente de 01Net
 def fetch_cyberattacks():
     print(f"🔍 Scraping de {SOURCE_URL}...")
     all_entries = []
@@ -33,40 +33,41 @@ def fetch_cyberattacks():
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # 🔍 Trouver la section de l’article à scraper
-        sommaire = soup.find("h2", string="Sommaire")  # Trouver l'en-tête Sommaire
-        votre_opinion = soup.find("h2", string="Votre opinion")  # Trouver la fin de l'article
-
-        if not sommaire or not votre_opinion:
-            print("⚠️ Impossible de trouver les sections 'Sommaire' et 'Votre opinion'.")
-            logging.warning("⚠️ Sections Sommaire et Votre opinion non trouvées.")
+        # 🔍 Trouver le bloc principal contenant les cyberattaques
+        main_content = soup.find("div", class_="article-body")  # Adapter la classe si besoin
+        if not main_content:
+            print("⚠️ Impossible de trouver la section principale.")
+            logging.warning("⚠️ Section principale non trouvée.")
             return []
 
-        # Extraire uniquement le contenu situé entre ces deux balises
-        content_section = []
-        for element in sommaire.find_next_siblings():
-            if element == votre_opinion:
-                break  # Arrêter le scraping à "Votre opinion"
-            content_section.append(element.text.strip())
+        # 📌 Extraire les paragraphes contenant les cyberattaques
+        paragraphs = main_content.find_all("p")
+        current_entry = {}
+        for para in paragraphs:
+            text = para.text.strip()
 
-        # 🛠️ Nettoyage du texte
-        content_text = "\n".join(content_section).strip()
+            # 🟢 Vérification d'un nouveau bloc de cyberattaque
+            if text[:5].isdigit() and "/" in text[:5]:  # Exemple : "14/02"
+                if current_entry:
+                    all_entries.append(current_entry)  # Ajouter l'entrée précédente avant d'en créer une nouvelle
 
-        # 📌 Séparer chaque cyberattaque en utilisant les titres en gras comme repère
-        entries = content_text.split("\n\n")
-        for entry in entries:
-            lines = entry.split("\n")
-            if len(lines) > 1:  # Vérifier qu'il y a bien une structure
-                date = lines[0].strip()  # La première ligne est la date
-                title = lines[1].strip()  # La deuxième ligne est l’entreprise concernée
-                description = " ".join(lines[2:]).strip()  # Le reste est la description de l’attaque
+                current_entry = {
+                    "date": text,
+                    "titre": "Non mentionné",
+                    "resume": "",
+                    "lien": SOURCE_URL
+                }
 
-                all_entries.append({
-                    "date": date,
-                    "titre": title,
-                    "resume": description,
-                    "lien": SOURCE_URL  # Même lien pour toutes les attaques
-                })
+            # 🏢 Si une entreprise est mentionnée en début de phrase, on l’ajoute comme titre
+            elif len(text.split()) > 1 and text.split()[0][0].isupper():
+                current_entry["titre"] = text.split(":")[0]  # Extraire le nom de l'entreprise si c'est structuré
+
+            # 📜 Ajouter le texte à la description
+            elif current_entry:
+                current_entry["resume"] += " " + text
+
+        if current_entry:
+            all_entries.append(current_entry)  # Ajouter la dernière entrée
 
     except requests.RequestException as e:
         print(f"❌ Erreur lors du scraping de 01Net: {e}")
@@ -80,7 +81,7 @@ def generate_cyberattack_table(articles):
         return "❌ Aucune cyberattaque trouvée sur 01Net."
 
     articles_text = "\n".join([
-        f"- **Date** : {article['date']}\n  **Titre** : {article['titre']}\n  **Résumé** : {article['resume']}\n  **Lien** : {article['lien']}"
+        f"- **Date** : {article['date']}\n  **Société** : {article['titre']}\n  **Résumé** : {article['resume']}\n  **Lien** : {article['lien']}"
         for article in articles
     ])
 
