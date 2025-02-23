@@ -10,6 +10,9 @@ API_KEY = os.getenv("OPENAI_API_KEY")
 # 📌 Modèle OpenAI utilisé
 GPT_MODEL = "gpt-4-turbo"
 
+# ✅ Initialisation du client OpenAI
+client = openai.Client(api_key=API_KEY)
+
 # 📂 Configuration du log
 logging.basicConfig(filename="log.txt", level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -78,7 +81,7 @@ def generate_cyberattack_table(articles):
     """
 
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=GPT_MODEL,
             messages=[
                 {"role": "system", "content": "Tu es un expert en cybersécurité."},
@@ -86,8 +89,8 @@ def generate_cyberattack_table(articles):
             ],
             temperature=0.7
         )
-        return response["choices"][0]["message"]["content"]
-    except openai.error.OpenAIError as e:
+        return response.choices[0].message.content
+    except openai.OpenAIError as e:
         logging.error(f"❌ Erreur OpenAI : {e}")
         return "❌ Erreur OpenAI lors de la génération du tableau."
 
