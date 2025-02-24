@@ -12,3 +12,5 @@
 2025-02-23 10:29:14,077 - INFO - ✅ Fichier 'cyberattaques_2025.md' mis à jour avec succès !
 2025-02-23 10:44:28,253 - WARNING - ⚠️ Section principale non trouvée.
 2025-02-23 10:44:28,253 - INFO - ✅ Fichier 'cyberattaques_2025.md' mis à jour avec succès !
+2025-02-24 08:18:24,695 - WARNING - ⚠️ Section principale non trouvée.
+2025-02-24 08:18:24,698 - INFO - ✅ Fichier 'cyberattaques_2025.md' mis à jour avec succès !
