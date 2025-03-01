@@ -1,10 +1,14 @@
 name: CyberSec Watcher - GPT Update
 
-on:
-  schedule:
-    - cron: '0 8 * * 1'  # Exécuter chaque lundi
-  workflow_dispatch:  # Permet d'exécuter manuellement depuis GitHub Actions
+#on:
+  #schedule:
+  #  - cron: '0 8 * * 1'  # Exécuter chaque lundi
+ # workflow_dispatch:  # Permet d'exécuter manuellement depuis GitHub Actions
 
+on:
+  push:
+    paths:
+      - '**.py'
 jobs:
   update_cybersec_table:
     runs-on: ubuntu-latest
